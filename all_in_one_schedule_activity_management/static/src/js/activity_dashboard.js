@@ -154,9 +154,9 @@ class ActivityDashboard extends Component {
         // );
         // this.manage_activities.cancelled_activity = await this.addOriginNames(cancelled);
     
-        console.log("Planned Activities:", this.manage_activities.planned_activity);
-        console.log("Overdue Activities:", this.manage_activities.overdue_activity);
-        console.log("Completed Activities:", this.manage_activities.done_activity);
+        // console.log("Planned Activities:", this.manage_activities.planned_activity);
+        // console.log("Overdue Activities:", this.manage_activities.overdue_activity);
+        // console.log("Completed Activities:", this.manage_activities.done_activity);
         // console.log("Cancelled Activities:", this.manage_activities.cancelled_activity);
     }
     
@@ -190,30 +190,50 @@ class ActivityDashboard extends Component {
     async fetch_filtered_activities(filters) {
 
         let domain = [];
+        console.log(filters)
+        const field=["display_name","activity_type_id","user_id","date_deadline","state","create_date","write_date","res_id","res_model"];
 
         if (filters.typeId) {
-            domain.push(["activity_type_id", "=", filters.typeId]);
+            domain.push(["activity_type_id", "in", [filters.typeId]]);
+            console.log("typeId",domain)
         }
 
         if (filters.user && filters.user !== "All") {
             domain.push(["user_id", "=", filters.user]);
+            console.log("user",domain)
         }
 
         const activities = await this.orm.searchRead(
             "mail.activity",
-            domain,
-            ["display_name","activity_type_id","user_id","date_deadline","state","create_date","write_date","res_id","res_model"]
+           domain,
+            field,
+            {}
         );
         
-        const withOrigin = await this.addOriginNames(activities);
+        console.log(activities)
+       
 
-        this.manage_activities.planned_activity = withOrigin.filter(a => a.state === "planned");
-        this.manage_activities.today_activity   = withOrigin.filter(a => a.state === "today");
-        this.manage_activities.overdue_activity = withOrigin.filter(a => a.state === "overdue");
-        this.manage_activities.done_activity    = withOrigin.filter(a => a.state === "done");
-        // this.manage_activities.cancelled_activity = [];
+                        
+                // regroup
+            const planned = activities.filter(a => a.state === "planned");
+            const today   = activities.filter(a => a.state === "today");
+            const overdue = activities.filter(a => a.state === "overdue");
+            const done    = activities.filter(a => a.state === "done");
 
-        this.manage_activities = { ...this.manage_activities };
+            this.manage_activities.planned_activity = await this.addOriginNames(planned);
+            this.manage_activities.today_activity = await this.addOriginNames(today);
+            this.manage_activities.overdue_activity = await this.addOriginNames(overdue);
+            this.manage_activities.done_activity = await this.addOriginNames(done);
+
+                    // Update counts too
+            this.manage_activities.len_planned = planned.length;
+            this.manage_activities.len_today = today.length;
+            this.manage_activities.len_overdue = overdue.length;
+            this.manage_activities.len_done = done.length;
+
+            // Force re-render
+            this.render();
+
     }
 
 

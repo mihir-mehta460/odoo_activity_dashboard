@@ -60,7 +60,6 @@
     background: #fafafa;
     border-right: 1px solid #e0e0e0;
     padding: 20px 16px;
-    position: fixed;
     top: 120px;  /* Adjusted below header */
     left: 0;
     height: calc(100vh - 120px);  /* Sidebar height after header */
@@ -108,7 +107,8 @@
 
 /* Content Styles */
 .activity_dashboard .o_content {
-    margin-left: 240px !important;  /* Space for the sidebar */
+    box-shadow: 2px 0 6px rgba(0,0,0,0.08);
+
     padding: 20px 24px 40px !important;
     min-height: 100vh; /* Ensure content takes full height */
     background: #f8f9fa;
