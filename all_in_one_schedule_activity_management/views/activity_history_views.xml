@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="mail_activity_history_action" model="ir.actions.act_window">
+        <field name="name">Activity History</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">mail.activity</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">['|',('active', '=', True),('active','=', False)]</field>
+    </record>
+</odoo>

@@ -1,0 +1,267 @@
+/* General Reset */
+.activity_dashboard p, .activity_dashboard span, .activity_dashboard a, .activity_dashboard ul, .activity_dashboard li, .activity_dashboard button {
+    font-size: inherit;
+    font-weight: inherit;
+    line-height: inherit;
+}
+
+.activity_dashboard strong {
+    font-weight: 600;
+}
+
+.activity_dashboard h1, .activity_dashboard h2, .activity_dashboard h3, .activity_dashboard h4, .activity_dashboard h5, .activity_dashboard h6 {
+    line-height: 1.5em;
+    font-weight: 300;
+}
+
+.activity_dashboard .sub_title {
+    font-size: 14px;
+}
+
+.activity_dashboard .sub_title div span {
+    font-weight: 600;
+}
+
+.activity_dashboard .chart #canvas_graph {
+    height: 400px !important;
+}
+
+.activity_dashboard .highcharts-background {
+    fill: none;
+}
+
+/* Header Section */
+.activity_dashboard .header_section {
+    padding: 20px;
+    background-color: #f4f5f6;
+    text-align: center;
+    font-size: 24px;
+    font-weight: 600;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    z-index: 9999;
+    position: relative;
+}
+
+.activity_dashboard .dashboard_heading {
+    margin: 0;
+    color: #333;
+}
+
+/* Line Below Header */
+.activity_dashboard .header_line {
+    margin-top: 10px;
+    border-top: 3px solid #e0e0e0;
+    width: 100%;
+}
+
+/* Sidebar Styles */
+.activity_dashboard .o_sidebar {
+    width: 240px;
+    background: #fafafa;
+    border-right: 1px solid #e0e0e0;
+    padding: 20px 16px;
+    position: fixed;
+    top: 120px;  /* Adjusted below header */
+    left: 0;
+    height: calc(100vh - 120px);  /* Sidebar height after header */
+    overflow-y: auto;
+    z-index: 10;
+    box-sizing: border-box;
+    box-shadow: 2px 0 6px rgba(0,0,0,0.08);
+}
+
+.activity_dashboard .o_section h3,.o_section h4 {
+    font-size: 14px;
+    font-weight: 600;
+    color: #4a4a4a;
+    margin-bottom: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+}
+
+.activity_dashboard .o_action_manager {
+    overflow: visible !important;   /* prevent unwanted scrollbars cutting content */
+    height: auto !important;
+    min-height: unset !important;
+}
+
+.activity_dashboard .o_list_filters li {
+    margin-bottom: 8px;
+}
+
+.activity_dashboard .o_list_filters li a {
+    cursor: pointer;
+    color: #333;
+    font-size: 13px;
+    text-decoration: none;
+    display: block;
+    padding: 4px 8px;
+    border-radius: 4px;
+    transition: all 0.12s;
+}
+
+.activity_dashboard .o_list_filters li a:hover,.o_list_filters li a.active {
+    background: #e8f0fe;
+    color: #1a73e8;
+    font-weight: 500;
+}
+
+/* Content Styles */
+.activity_dashboard .o_content {
+    margin-left: 240px !important;  /* Space for the sidebar */
+    padding: 20px 24px 40px !important;
+    min-height: 100vh; /* Ensure content takes full height */
+    background: #f8f9fa;
+    box-sizing: border-box;
+    position: relative;
+    top: 0; /* Align content with the top of the page */
+}
+
+/* Flexbox Layout for Cards */
+.activity_dashboard .dashboard_main_section,
+.table_view,
+.table_planned_activity,
+.table_today_activity,
+.table_main_view {
+    margin-left: 0 !important;     /* reset any negative or small margins */
+    padding-left: 0 !important;
+    margin-top: 8px !important;
+}
+
+/* Flexbox Layout for Activity Cards */
+.activity_dashboard .dashboard_main_section {
+    display: flex;
+    gap: 16px;  /* Horizontal gap */
+    flex-wrap: wrap;
+    margin-top: 0;  /* Ensure no extra space at the top */
+}
+
+.activity_dashboard.o_content > *:first-child {
+    margin-left: 0;
+}
+
+/* Activity Card Styling */
+.activity_dashboard .activity-dashboard-card {
+    flex: 1;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    padding: 16px 12px;
+    text-align: center;
+    height: 150px; /* Set height for consistent card sizes */
+}
+
+/* Activity Heading Styling */
+.activity_dashboard .activity-dashboard-card__details h4 {
+    font-size: 16px;
+    font-weight: 600;
+    margin-top: 8px;
+}
+
+.activity_dashboard.activity-dashboard-card__icon-container {
+    justify-content: center !important;
+    margin-bottom: 8px;
+}
+
+.activity_dashboard.activity-dashboard-card__icon-container i {
+    padding: 0 !important;
+    margin: 0 auto;
+    display: block;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+    .activity_dashboard .dashboard_main_section {
+        flex-direction: column;  /* Stack cards vertically on mobile */
+    }
+
+    .activity_dashboard .activity-dashboard-card {
+        flex: 1 1 100%;  /* Take full width on mobile */
+    }
+}
+
+/* Align buttons horizontally */
+.activity_dashboard .click-view, .activity_dashboard .click-origin-view {
+    display: inline-flex;  /* Align buttons horizontally */
+    gap: 10px;  /* Space between buttons */
+}
+
+/* Button styling */
+.activity_dashboard .click-view button, .activity_dashboard .click-origin-view button {
+    width: auto;  /* Allow buttons to adjust their width */
+    height: 35px;
+    padding: 5px 10px;  /* Adjust padding to ensure buttons fit */
+    border-radius: 8px;
+    background-color: #c4c4f2;
+    text-align: center;  /* Ensure the text inside the button is centered */
+}
+/* ===============================
+   ACTIVITY DASHBOARD CARDS
+   =============================== */
+
+.activity_dashboard .o_activity_cards {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 18px;
+    margin-top: 10px;
+}
+
+/* Card */
+.activity_dashboard .activity-dashboard-card {
+    background: #ffffff;
+    border-radius: 10px;
+    height: 120px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    border: 1px solid #e5e7eb;
+    transition: 0.18s ease;
+    cursor: pointer;
+}
+
+.activity_dashboard .activity-dashboard-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+}
+
+/* icon */
+.activity_dashboard .o_stat_icon {
+    font-size: 24px;
+    color: #6b7280;
+    margin-bottom: 6px;
+}
+
+/* number */
+.activity_dashboard .o_stat_value {
+    font-size: 26px;
+    font-weight: 600;
+    color: #111827;
+}
+
+/* label */
+.activity_dashboard .o_stat_label {
+    font-size: 13px;
+    color: #6b7280;
+}
+
+/* responsive */
+@media (max-width: 1400px) {
+    .activity_dashboard .o_activity_cards {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (max-width: 900px) {
+    .activity_dashboard .o_activity_cards {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 500px) {
+    .activity_dashboard .o_activity_cards {
+        grid-template-columns: 1fr;
+    }
+}

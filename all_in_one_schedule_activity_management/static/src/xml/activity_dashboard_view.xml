@@ -1,0 +1,584 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- This XML code creates the dashboard for the mail.activity. -->
+<templates>
+    <t t-name="ActivityDashboard">
+        
+            <!-- Dashboard Title -->
+            <div class="header_section">
+            <h1 class="dashboard_heading">Activity Dashboard</h1>
+            <div class="header_line"></div> 
+        </div>
+        <div class="activity_dashboard d-flex" style="min-height: 100vh;">
+            <!-- Sidebar Section for Filters -->
+            <div class="o_sidebar">
+                <div class="o_section">
+                    <h3>Filters</h3>
+
+                    <!-- Filter by Activity Type -->
+                    <h3>Activity Type</h3>
+                    <ul class="o_list_filters">
+                        <!-- All -->
+                        <li>
+                            <a href="#" t-on-click="() => filter_activity_type(false)">
+                                All
+                            </a>
+                        </li>
+
+                        <!-- Dynamic activity types from DB -->
+                        <t t-if="activity_types">
+                            <t t-foreach="activity_types" t-as="type" t-key="type.id">
+                                <li>
+                                    <a href="#" t-on-click="() => filter_activity_type(type.id)">
+                                        <t t-esc="type.name"/>
+                                    </a>
+                                </li>
+                            </t>
+                        </t>
+                    </ul>
+                </div>
+
+                <!-- Filter by Assigned To (Dynamically Generated List) -->
+                <div class="o_section">
+                    <h4>Assigned To</h4>
+                    <ul class="o_list_filters">
+                        <li><a href="#" t-on-click="() => filter_assigned_to('All')">All</a></li>
+                        <t t-if="users.length">
+                            <t t-foreach="users" t-as="user" t-key="user.id">
+                                <li><a href="#" t-on-click="() => filter_assigned_to(user.id)">
+                                        <t t-esc="user.name"/></a></li>
+                            </t>
+                        </t>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Main Content Area -->
+            <div class="o_content">
+                <!-- Displaying the Manage Activity Section -->
+                <div class="table_view">
+                    <t t-call="ManageActivity"/>
+                </div>
+
+                <br/>
+                <!-- Displaying the Activity Table Section -->
+                <div class="table_view_activity">
+                    <t t-call="ActivityTable"/>
+                </div>
+            </div>
+        </div>
+    </t>
+    <t t-name="ManageActivity">
+        <section class="dashboard_main_section">
+            <!-- <div class="o_activity_card"> -->
+                <!-- <div style="width: 20%;">
+                    <div class="activity-dashboard-card planned_activity"
+                         t-on-click="planned_activity">
+                        <div class="activity-dashboard-card__icon-container bg-mauve-light d-flex">
+                            <i class="fa fa-clock-o text-mauve" style="padding-right: 80px; color: #3c3939;font-size: 30px;
+                            padding-left: 0px;padding-bottom: 5px;padding-top: 13px;"/>
+                        </div>
+
+                        <div style="font-size: 30px;color: #3c3939;padding-left: 0px;padding-bottom: 17px;padding-top: 11px;">
+                            <t t-esc="manage_activities.len_planned"/>
+                        </div>
+                        <div class="dashboard-card__details"
+                             style="padding-left: 26px;padding-bottom: 03px;padding-top: 11px;">
+                            <h3>
+                                <span>
+                                    <div id="leads_this_year"/>
+                                    <div id="leads_this_quarter"/>
+                                    <div id="leads_this_month"/>
+                                    <div id="leads_this_week"/>
+                                </span>
+                            </h3>
+                            <h4>Planned Activity</h4>
+                        </div>
+                    </div> -->
+                    <div class="activity-dashboard-card planned_activity" t-on-click="planned_activity">
+                        <i class="fa fa-clock-o o_stat_icon"/>
+                        <div class="o_stat_value">
+                            <t t-esc="manage_activities.len_planned"/>
+                        </div>
+                        <div class="o_stat_label">Planned Activity</div>
+                    </div>
+                <!-- </div> -->
+                <!-- <div style="width: 20%;">
+                    <div class="activity-dashboard-card done_activity"
+                         t-on-click="done_activity">
+                        <div class="activity-dashboard-card__icon-container bg-mauve-light d-flex">
+                            <i class="fa fa-clock-o text-mauve" style="padding-right: 80px; color: #3c3939;font-size: 30px;
+                            padding-left: 0px;padding-bottom: 5px;padding-top: 13px;"/>
+                        </div>
+
+                        <div style="font-size: 30px;color: #3c3939;padding-left: 0px;padding-bottom: 17px;padding-top: 11px;">
+                            <t t-esc="manage_activities.len_done"/>
+                        </div>
+                        <div class="dashboard-card__details"
+                             style="padding-left: 26px;padding-bottom: 03px;padding-top: 11px;">
+                            <h3>
+                                <span>
+                                    <div id="leads_this_year"/>
+                                    <div id="leads_this_quarter"/>
+                                    <div id="leads_this_month"/>
+                                    <div id="leads_this_week"/>
+                                </span>
+                            </h3>
+                            <p>
+                                <h4>Completed Activities</h4>
+                            </p>
+                        </div>
+                    </div>
+                </div> -->
+                <div class="activity-dashboard-card done_activity" t-on-click="done_activity">
+                    <i class="fa fa-check-circle o_stat_icon"/>
+                    <div class="o_stat_value">
+                        <t t-esc="manage_activities.len_done"/>
+                    </div>
+                    <div class="o_stat_label">Completed Activities</div>
+                </div>
+
+                <!-- <div style="width: 20%;">
+                    <div class="activity-dashboard-card today_activity"
+                         t-on-click="today_activity">
+                        <div class="activity-dashboard-card__icon-container bg-mauve-light d-flex">
+                            <i class="fa fa-clock-o text-mauve" style="padding-right: 80px; color: #3c3939;font-size: 30px;
+                            padding-left: 0px;padding-bottom: 5px;padding-top: 13px;"/>
+                        </div>
+                        <div style="font-size: 30px;color: #3c3939;padding-left: 0px;padding-bottom: 17px;padding-top: 11px;">
+                            <t t-esc="manage_activities.len_today"/>
+                        </div>
+                        <div class="dashboard-card__details"
+                             style="padding-left: 26px;padding-bottom: 03px;padding-top: 11px;">
+                            <h3>
+                                <span>
+                                    <div id="leads_this_year"/>
+                                    <div id="leads_this_quarter"/>
+                                    <div id="leads_this_month"/>
+                                    <div id="leads_this_week"/>
+                                </span>
+                            </h3>
+                            <p>
+                                <h4>Today's Activities</h4>
+                            </p>
+                        </div>
+                    </div>
+                </div> -->
+                <div class="activity-dashboard-card today_activity" t-on-click="today_activity">
+                    <i class="fa fa-calendar o_stat_icon"/>
+                    <div class="o_stat_value">
+                        <t t-esc="manage_activities.len_today"/>
+                    </div>
+                    <div class="o_stat_label">Today's Activities</div>
+                </div>
+
+                <!-- <div style="width: 20%;">
+                    <div class="activity-dashboard-card overdue_activity"
+                         t-on-click="overdue_activity">
+                        <div class="activity-dashboard-card__icon-container bg-mauve-light d-flex">
+                            <i class="fa fa-clock-o text-mauve" style="padding-right: 80px; color: #3c3939;font-size: 30px;
+                            padding-left: 0px;padding-bottom: 5px;padding-top: 13px;"/>
+                        </div>
+                        <div style="font-size: 30px;color: #3c3939;padding-left: 0px;padding-bottom: 17px;padding-top: 11px;">
+                            <t t-esc="manage_activities.len_overdue"/>
+                        </div>
+                        <div class="dashboard-card__details"
+                             style="padding-left: 26px;padding-bottom: 03px;padding-top: 11px;">
+                            <h3>
+                                <span>
+                                    <div id="leads_this_year"/>
+                                    <div id="leads_this_quarter"/>
+                                    <div id="leads_this_month"/>
+                                    <div id="leads_this_week"/>
+                                </span>
+                            </h3>
+                            <p>
+                                <h4>Overdue Activities</h4>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="width: 20%;">
+                    <div class="activity-dashboard-card cancelled_activity"
+                         t-on-click="cancelled_activity">
+                        <div class="activity-dashboard-card__icon-container bg-mauve-light d-flex">
+                            <i class="fa fa-clock-o text-mauve" style="padding-right: 80px; color: #3c3939;font-size: 30px;
+                            padding-left: 0px;padding-bottom: 5px;padding-top: 13px;"/>
+                        </div>
+                        <div style="font-size: 30px;color: #3c3939;padding-left: 0px;padding-bottom: 17px;padding-top: 11px;">
+                            <t t-esc="manage_activities.len_cancel"/>
+                        </div>
+                        <div class="dashboard-card__details"
+                             style="padding-left: 26px;padding-bottom: 03px;padding-top: 11px;">
+                            <h3>
+                                <span>
+                                    <div id="leads_this_year"/>
+                                    <div id="leads_this_quarter"/>
+                                    <div id="leads_this_month"/>
+                                    <div id="leads_this_week"/>
+                                </span>
+                            </h3>
+                            <p>
+                                <h4>Cancelled Activities</h4>
+                            </p>
+                        </div>
+                    </div>
+                </div> -->
+                <div class="activity-dashboard-card overdue_activity" t-on-click="overdue_activity">
+                    <i class="fa fa-exclamation-triangle o_stat_icon"/>
+                    <div class="o_stat_value">
+                        <t t-esc="manage_activities.len_overdue"/>
+                    </div>
+                    <div class="o_stat_label">Overdue Activities</div>
+                </div>
+
+            <!-- Cancelled -->
+                <!-- <div class="activity-dashboard-card cancelled_activity" t-on-click="cancelled_activity">
+                    <i class="fa fa-times-circle o_stat_icon"/>
+                    <div class="o_stat_value">
+                        <t t-esc="manage_activities.len_cancel"/>
+                    </div>
+                    <div class="o_stat_label">Cancelled Activities</div>
+                </div> -->
+            
+        </section>
+    </t>
+    <t t-name="ActivityTable">
+        <div class="table_today_activity">
+            <t t-if="manage_activities.planned_activity">
+                <table cellspacing="10" width="100%"
+                       style="padding: 24px; background-color: white; color: #454748; border-collapse:separate;">
+                    <thead>
+                        <tr>
+                            <th>Planned Activities</th>
+                        </tr>
+                        <t t-if="manage_activities.planned_activity == ''">
+                            <td>No Data Available</td>
+                        </t>
+                    </thead>
+                    <t t-if="manage_activities.planned_activity != ''">
+                        <thead class="table table-bordered mt32">
+                            <tr class="table_head">
+                                <th class="table_head_">Name</th>
+                                <th class="table_head_">Activity Type</th>
+                                <th class="table_head_">Assigned to</th>
+                                <th class="table_head_">Due Date</th> <!-- Added Due Date -->
+                                <th class="table_head_">State</th> <!-- Added State -->
+                                <th class="table_head_">Created On</th> <!-- Added Created On -->
+                                <th class="table_head_">Modified On</th> <!-- Added Modified On -->
+                                <th class="table_head_">Origin</th> 
+                                <th class="table_head_">Edit</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr t-foreach="manage_activities.planned_activity"
+                                t-as="line" t-key="line['id']">
+                                <td>
+                            <t t-esc="line['display_name']"/>
+                        </td>
+                        <td>
+                            <t t-esc="line['activity_type_id']['1']"/>
+                        </td>
+                        <td>
+                            <t t-esc="line['user_id']['1']"/>
+                        </td>
+                        <td>
+                            <t t-esc="line['due_date']"/> <!-- Display Due Date -->
+                        </td>
+                        <td>
+                            <t t-esc="line['state']"/> <!-- Display State -->
+                        </td>
+                        <td>
+                            <t t-esc="line['create_date']"/> <!-- Display Created On -->
+                        </td>
+                        <td>
+                            <t t-esc="line['write_date']"/> <!-- Display Modified On -->
+                        </td>
+                        <!-- <td> -->
+                            <!-- <t t-esc="line['source_name']"/> Display Source Name -->
+                        <!-- </td> -->
+
+                        <td class="cursor-pointer"
+                                    t-on-click="click_origin_view"
+                                    t-att-data-id="line.id">
+
+                                    <div class="d-flex align-items-center ps-2 rounded">
+                                        <!-- <i class="fa fa-pencil me-1 pe-none"/> -->
+                                        <!-- <span class="pe-none">Origin</span> -->
+                                        <t t-if="line.origin_name">
+                                            <span class="pe-none" t-esc="line.origin_name"/>
+                                        </t>
+                                    </div>
+                                </td>
+
+                                <td class="cursor-pointer"
+                            t-on-click="click_view"
+                            t-att-data-id="line.id">
+
+                            <div class="d-flex align-items-center ps-2 rounded">
+                                <i class="fa fa-pencil me-1 pe-none"/>
+                                <span class="pe-none">Edit</span>
+                            </div>
+
+                        </td>
+                                
+                            </tr>
+                        </tbody>
+                    </t>
+                </table>
+            </t>
+        </div>
+        <div class="table_today_activity">
+            <t t-if="manage_activities.today_activity">
+                <table cellspacing="10" width="100%"
+                    style="padding: 24px; background-color: white; color: #454748; border-collapse:separate;">
+                    <thead>
+                        <tr>
+                            <th>Today's Activities</th>
+                        </tr>
+                        <t t-if="manage_activities.today_activity == ''">
+                            <td>No Data Available</td>
+                        </t>
+                    </thead>
+
+                    <t t-if="manage_activities.today_activity != ''">
+                        <thead class="table table-bordered mt32">
+                            <tr class="table_head">
+                                <th class="table_head_">Name</th>
+                                <th class="table_head_">Activity Type</th>
+                                <th class="table_head_">Assigned to</th>
+                                <th class="table_head_">Due Date</th> <!-- Added Due Date -->
+                                <th class="table_head_">State</th> <!-- Added State -->
+                                <th class="table_head_">Created On</th> <!-- Added Created On -->
+                                <th class="table_head_">Modified On</th> <!-- Added Modified On -->
+                                <!-- <th class="table_head_">Source Name</th> Added Source Name -->
+                                <th class="table_head_">Origin</th>
+                                <th class="table_head_">Edit</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr t-foreach="manage_activities.today_activity"
+                                t-as="line" t-key="line['id']">
+                                <td>
+                                    <t t-esc="line['display_name']"/>
+                                </td>
+                                <td>
+                                    <t t-esc="line['activity_type_id']['1']"/>
+                                </td>
+                                <td>
+                                    <t t-esc="line['user_id']['1']"/>
+                                </td>
+                                <td>
+                                    <t t-esc="line['due_date']"/> <!-- Display Due Date -->
+                                </td>
+                                <td>
+                                    <t t-esc="line['state']"/> <!-- Display State -->
+                                </td>
+                                <td>
+                                    <t t-esc="line['create_date']"/> <!-- Display Created On -->
+                                </td>
+                                <td>
+                                    <t t-esc="line['write_date']"/> <!-- Display Modified On -->
+                                </td>
+                                <!-- <td> -->
+                                    <!-- <t t-esc="line['source_name']"/> Display Source Name -->
+                                <!-- </td> -->
+
+                                <td t-if="line.res_id"
+                                    class="cursor-pointer"
+                                    t-on-click="click_origin_view"
+                                    t-att-data-id="line.id">
+
+                                    <div class="d-flex align-items-center ps-2 rounded">
+                                        <!-- <i class="fa fa-pencil me-1 pe-none"/>
+                                        <span class="pe-none">Origin</span> -->
+                                        <t t-if="line.origin_name">
+                                            <span class="pe-none" t-esc="line.origin_name"/>
+                                        </t>
+                                    </div>
+                                </td>
+                            <td class="cursor-pointer"
+                                    t-on-click="click_view"
+                                    t-att-data-id="line.id">
+
+                                    <div class="d-flex align-items-center ps-2 rounded">
+                                        <i class="fa fa-pencil me-1 pe-none"/>
+                                        <span class="pe-none">Edit</span>
+                                    </div>
+
+                                </td>
+
+                                
+                            </tr>
+                        </tbody>
+                    </t>
+                </table>
+            </t>
+        </div>
+
+        <div class="table_main_view">
+            <t t-if="manage_activities.done_activity">
+                <table cellspacing="10" width="100%"
+                       style="padding: 24px; background-color: white; color: #454748; border-collapse:separate;">
+                    <thead>
+                        <tr>
+                            <th>Completed Activities</th>
+                        </tr>
+                        <t t-if="manage_activities.done_activity == ''">
+                            <td>No Data Available</td>
+                        </t>
+                    </thead>
+
+                    <t t-if="manage_activities.done_activity != ''">
+                        <thead class="table table-bordered mt32">
+                            <tr class="table_head">
+                                <th class="table_head_">Name</th>
+                                <th class="table_head_">Activity Type</th>
+                                <th class="table_head_">Assigned to</th>
+                                <th class="table_head_">Due Date</th> <!-- Added Due Date -->
+                                <th class="table_head_">State</th> <!-- Added State -->
+                                <th class="table_head_">Created On</th> <!-- Added Created On -->
+                                <th class="table_head_">Modified On</th> <!-- Added Modified On -->
+                                <th class="table_head_">Origin</th> 
+                                <th class="table_head_">Edit</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr t-foreach="manage_activities.done_activity"
+                                t-as="line" t-key="line['id']">
+                                <td>
+                            <t t-esc="line['display_name']"/>
+                        </td>
+                        <td>
+                            <t t-esc="line['activity_type_id']['1']"/>
+                        </td>
+                        <td>
+                            <t t-esc="line['user_id']['1']"/>
+                        </td>
+                        <td>
+                            <t t-esc="line['due_date']"/> <!-- Display Due Date -->
+                        </td>
+                        <td>
+                            <t t-esc="line['state']"/> <!-- Display State -->
+                        </td>
+                        <td>
+                            <t t-esc="line['create_date']"/> <!-- Display Created On -->
+                        </td>
+                        <td>
+                            <t t-esc="line['write_date']"/> <!-- Display Modified On -->
+                        </td>
+                        <!-- <td> -->
+                            <!-- <t t-esc="line['source_name']"/> Display Source Name -->
+                        <!-- </td> -->
+
+                        <td class="cursor-pointer"
+                                    t-on-click="click_origin_view"
+                                    t-att-data-id="line.id">
+                                    <div class="d-flex align-items-center ps-2 rounded">
+                                        <!-- <i class="fa fa-pencil me-1 pe-none"/>
+                                        <span class="pe-none">Origin</span> -->
+                                        <t t-if="line.origin_name">
+                                            <span class="pe-none" t-esc="line.origin_name"/>
+                                        </t>
+                                    </div>
+                                </td>
+                                <td class="cursor-pointer"
+                            t-on-click="click_view"
+                            t-att-data-id="line.id">
+
+                            <div class="d-flex align-items-center ps-2 rounded">
+                                <i class="fa fa-pencil me-1 pe-none"/>
+                                <span class="pe-none">Edit</span>
+                            </div>
+
+                        </td>
+                            
+                            </tr>
+                        </tbody>
+                    </t>
+                </table>
+            </t>
+        </div>
+        <div class="table_main_view">
+            <t t-if="manage_activities.overdue_activity">
+                <table cellspacing="10" width="100%"
+                       style="padding: 24px; background-color: white; color: #454748; border-collapse:separate;">
+                    <thead>
+                        <tr>
+                            <th>Overdue Activities</th>
+                        </tr>
+                        <t t-if="manage_activities.overdue_activity == ''">
+                            <td>No Data Available</td>
+                        </t>
+                    </thead>
+                    <t t-if="manage_activities.overdue_activity != ''">
+                        <thead class="table table-bordered mt32">
+                            <tr class="table_head">
+                                <th class="table_head_">Name</th>
+                                <th class="table_head_">Activity Type</th>
+                                <th class="table_head_">Assigned to</th>
+                                <th class="table_head_">Due Date</th> <!-- Added Due Date -->
+                                <th class="table_head_">State</th> <!-- Added State -->
+                                <th class="table_head_">Created On</th> <!-- Added Created On -->
+                                <th class="table_head_">Modified On</th> <!-- Added Modified On -->
+                                <th class="table_head_">Origin</th>  
+                                <th class="table_head_">Edit</th>            
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr t-foreach="manage_activities.overdue_activity"
+                                t-as="line" t-key="line['id']">
+                                <td>
+                            <t t-esc="line['display_name']"/>
+                        </td>
+                        <td>
+                            <t t-esc="line['activity_type_id']['1']"/>
+                        </td>
+                        <td>
+                            <t t-esc="line['user_id']['1']"/>
+                        </td>
+                        <td>
+                            <t t-esc="line['due_date']"/> <!-- Display Due Date -->
+                        </td>
+                        <td>
+                            <t t-esc="line['state']"/> <!-- Display State -->
+                        </td>
+                        <td>
+                            <t t-esc="line['create_date']"/> <!-- Display Created On -->
+                        </td>
+                        <td>
+                            <t t-esc="line['write_date']"/> <!-- Display Modified On -->
+                        </td>
+                        <!-- <td> -->
+                            <!-- <t t-esc="line['source_name']"/> Display Source Name -->
+                        <!-- </td> -->
+                        <td class="cursor-pointer"
+                                    t-on-click="click_origin_view"
+                                    t-att-data-id="line.id">
+                                    <div class="d-flex align-items-center ps-2 rounded">
+                                        <!-- <i class="fa fa-pencil me-1 pe-none"/>
+                                        <span class="pe-none">Origin</span> -->
+                                        <t t-if="line.origin_name">
+                                            <span class="pe-none" t-esc="line.origin_name"/>
+                                        </t>
+                                    </div>
+                                </td>
+                                <td class="cursor-pointer"
+                            t-on-click="click_view"
+                            t-att-data-id="line.id">
+
+                            <div class="d-flex align-items-center ps-2 rounded">
+                                <i class="fa fa-pencil me-1 pe-none"/>
+                                <span class="pe-none">Edit</span>
+                            </div>
+
+                        </td>
+                        
+                            </tr>
+                        </tbody>
+                    </t>
+                </table>
+            </t>
+        </div>
+    </t>
+</templates>

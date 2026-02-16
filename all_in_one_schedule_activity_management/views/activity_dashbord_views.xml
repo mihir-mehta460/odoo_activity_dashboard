@@ -1,0 +1,133 @@
+<odoo>
+
+    <!-- Action to Mark Activity as Cancelled -->
+    <record id="action_activity_cancel" model="ir.actions.server">
+        <field name="name">Cancel</field>
+        <field name="model_id" ref="mail.model_mail_activity"/>
+        <field name="binding_model_id" ref="mail.model_mail_activity"/>
+        <field name="state">code</field>
+        <field name="code">
+            <![CDATA[
+for record in records:
+    record.write({'state': 'cancelled'})  # Mark as canceled instead of deleting
+action = {'type': 'ir.actions.client', 'tag': 'reload'}
+            ]]>
+        </field>
+    </record>
+
+    <!-- Action to Mark Activity as Done -->
+    <record id="action_activity_done" model="ir.actions.server">
+        <field name="name">Mark As Done</field>
+        <field name="model_id" ref="mail.model_mail_activity"/>
+        <field name="binding_model_id" ref="mail.model_mail_activity"/>
+        <field name="state">code</field>
+        <field name="code">
+            <![CDATA[
+for record in records:
+    record.action_done()
+action = {'type': 'ir.actions.client', 'tag': 'reload'}
+            ]]>
+        </field>
+    </record>
+
+
+    <!-- Action to Edit Activity -->
+    <record id="action_activity_wizard" model="ir.actions.act_window">
+        <field name="name">Edit Activity</field>
+        <field name="res_model">activity.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <!-- Ensures it opens as a modal (popup) -->
+    </record>
+
+    <!-- Activity Dashboard View (Main Content with Filters) -->
+    <record id="activity_dashboard_view" model="ir.ui.view">
+        <field name="name">activity.dashboard.view</field>
+        <field name="model">activity.dashboard</field>
+        <field name="arch" type="xml">
+            <form>
+                <div class="o_row">
+                    <div
+                        class="o_col o_content">
+                        <!-- Edit Button to Open Wizard -->
+                        <button name="%(action_activity_wizard)d" string="Edit" type="action" class="btn-primary"/>
+                    </div>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_activity_wizard_form" model="ir.ui.view">
+        <field name="name">activity.wizard.form</field>
+        <field name="model">activity.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Edit Activity">
+                <group>
+                    <field name="activity_type_id"/>
+                    <field name="summary"/>
+                    <field name="date_deadline"/>
+                    <field name="user_id"/>
+                    <field name="note"/>
+                </group>
+                <footer>
+                    <button string="Save" type="object" name="action_save" class="btn-primary"/>
+                    <button string="Cancel" type="object" name="action_cancel" class="btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action for Activity Dashboard -->
+    <record id="activity_dashboard_action" model="ir.actions.client">
+        <field name="name">Activity Dashboard</field>
+        <field name="tag">reload</field>
+    </record>
+
+    <!-- Activity Dashboard View for Displaying Completed Activities Count -->
+    <record id="activity_dashboard_view_completed_activities" model="ir.ui.view">
+        <field name="name">activity.dashboard.completed.activities.view</field>
+        <field name="model">activity.dashboard</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <!-- Completed Activities Count -->
+                    <field name="completed_activities"/>
+                </group>
+            </form>
+        </field>
+    </record>
+
+<!-- <data>
+       
+        <record id="activity_dashboard_view" model="ir.ui.view">
+            <field name="name">activity.dashboard.view</field>
+            <field name="model">activity.dashboard</field>
+            <field name="arch" type="xml">
+                <form>
+                    <div
+                        class="o_row">
+                       
+                        <div class="o_col o_sidebar">
+                            <div class="o_section">
+                                <h3>Activity Type</h3>
+                                <field name="activity_type_filter" widget="many2many_tags" domain="[('id', '!=', False)]"/>
+                            </div>
+
+                            <div class="o_section">
+                                <h3>Assigned To</h3>
+                                <field name="assigned_to_filter" widget="many2many_tags" domain="[('id', '!=', False)]"/>
+                            </div>
+                        </div>
+
+                    
+                        <div class="o_col o_content">
+                         
+                            <button name="%(action_activity_wizard)d" string="Edit" type="action" class="btn-primary"/>
+                        </div>
+                    </div>
+                </form>
+            </field>
+        </record>
+    </data> -->
+
+</odoo>
