@@ -30,9 +30,17 @@ class ActivityDashboard extends Component {
         });
         this.users = [];
 
+        // ✅ ADD THIS — reactive filter state for checkboxes
+        this.filterState = useState({
+            types: {},   // { [typeId]: true/false }
+            users: {},   // { [userId]: true/false }
+            allTypes: true,
+            allUsers: true,
+        });
+
         // 🔴 CRITICAL — bind handlers
-        this.filter_activity_type = this.filter_activity_type.bind(this);
-        this.filter_assigned_to = this.filter_assigned_to.bind(this);
+        // this.filter_activity_type = this.filter_activity_type.bind(this);
+        // this.filter_assigned_to = this.filter_assigned_to.bind(this);
         this.click_view = this.click_view.bind(this);
         this.click_origin_view = this.click_origin_view.bind(this);
 
@@ -52,6 +60,10 @@ class ActivityDashboard extends Component {
             [],
             ["name"]
         );
+        // ✅ Initialize filter state for each type
+        for (const type of this.activity_types) {
+            this.filterState.types[type.id] = false;
+        }
     }
 
     async addOriginNames(records) {
@@ -173,74 +185,113 @@ class ActivityDashboard extends Component {
                 { limit: 100 }
             );
             this.users = users;
+            for(const user of this.users){
+                this.filterState.users[user.id] = false;
+            }
         } catch (error) {
             console.error("Error fetching users:", error);
         }
     }
 
-    // Filter by Activity Type
-    filter_activity_type(typeId) {
-        console.log("Filtering by Activity Type: " + typeId);
-        this.fetch_filtered_activities({ typeId });
+    onTypeCheckbox(ev, typeId) {
+        // ✅ STEP 1: Toggle FIRST
+        this.filterState.types[typeId] = !this.filterState.types[typeId];
+        
+        // ✅ STEP 2: THEN check if any selected (now reads updated value)
+        const anySelected = Object.values(this.filterState.types).some(v => v === true);
+        this.filterState.allTypes = !anySelected;
+       
+
+        this.applyFilters();
     }
 
-    // Filter by Assigned To
-    filter_assigned_to(user) {
-        console.log("Filtering by Assigned To: " + user);
-        this.fetch_filtered_activities({ user });
+    onAllTypesCheckbox(ev) {
+        for (const key in this.filterState.types) {
+            this.filterState.types[key] = false;
+        }
+        this.filterState.allTypes = true;
+        this.applyFilters();
     }
 
-    async fetch_filtered_activities(filters) {
+    onUserCheckbox(ev, userId) {
+        const currentValue = this.filterState.users[userId] || false;
+        this.filterState.users[userId] = !currentValue;
 
+        const anySelected = Object.values(this.filterState.users).some(v => v === true);
+        this.filterState.allUsers = !anySelected;
+
+        this.applyFilters();
+    }
+
+    onAllUsersCheckbox(ev) {
+        for (const key in this.filterState.users) {
+            this.filterState.users[key] = false;
+        }
+        this.filterState.allUsers = true;
+        this.applyFilters();
+    }
+
+    // ── Apply filters ───────────────────────────────────────
+    async applyFilters() {
         let domain = [];
-        console.log(filters)
-        const field=["display_name","activity_type_id","user_id","date_deadline","state","create_date","write_date","res_id","res_model"];
 
-        if (filters.typeId) {
-            domain.push(["activity_type_id", "in", [filters.typeId]]);
-            console.log("typeId",domain)
+        // Collect selected type IDs
+        const selectedTypes = Object.entries(this.filterState.types)
+            .filter(([, v]) => v === true)
+            .map(([k]) => Number(k));
+            console.log(selectedTypes)
+
+        // Collect selected user IDs
+        const selectedUsers = Object.entries(this.filterState.users)
+            .filter(([, v]) => v === true)
+            .map(([k]) => Number(k));
+            
+
+        if (selectedTypes.length > 0) {
+            domain.push(["activity_type_id", "in", selectedTypes]);
         }
 
-        if (filters.user && filters.user !== "All") {
-            domain.push(["user_id", "=", filters.user]);
-            console.log("user",domain)
+        if (selectedUsers.length > 0) {
+            domain.push(["user_id", "in", selectedUsers]);
         }
+
+        await this.fetch_filtered_activities(domain);
+    }
+
+        // ✅ REPLACE fetch_filtered_activities
+    async fetch_filtered_activities(domain = []) {
+        const field = [
+            "display_name", "activity_type_id", "user_id", "date_deadline",
+            "state", "create_date", "write_date", "res_id", "res_model"
+        ];
 
         const activities = await this.orm.searchRead(
-            "mail.activity",
-           domain,
-            field,
-            {}
+            "mail.activity", domain, field, {}
         );
+
 
         const doneDomain = [...domain, ["active", "=", false]];
         const doneActivities = await this.orm.searchRead(
-            "mail.activity",
-            doneDomain,
-            field,
-            { context: { active_test: false } }  // <-- KEY: bypass active filter
+            "mail.activity", doneDomain, field,
+            { context: { active_test: false } }
         );
-        
-        console.log(activities)
-        console.log(doneActivities)
-       
-            const planned = activities.filter(a => a.state === "planned");
-            const today   = activities.filter(a => a.state === "today");
-            const overdue = activities.filter(a => a.state === "overdue");
-            // const done    = doneActivities.filter(a => a.state === "done");
 
-            this.manage_activities.planned_activity = await this.addOriginNames(planned);
-            this.manage_activities.today_activity = await this.addOriginNames(today);
-            this.manage_activities.overdue_activity = await this.addOriginNames(overdue);
-            this.manage_activities.done_activity = await this.addOriginNames(doneActivities);
 
-            this.manage_activities.len_planned = planned.length;
-            this.manage_activities.len_today = today.length;
-            this.manage_activities.len_overdue = overdue.length;
-            this.manage_activities.len_done = doneActivities.length;
+        const planned = activities.filter(a => a.state === "planned");
+        const today   = activities.filter(a => a.state === "today");
+        const overdue = activities.filter(a => a.state === "overdue");
 
-            this.render();
+        this.manage_activities.planned_activity = await this.addOriginNames(planned);
+        this.manage_activities.today_activity   = await this.addOriginNames(today);
+        this.manage_activities.overdue_activity = await this.addOriginNames(overdue);
+        this.manage_activities.done_activity    = await this.addOriginNames(doneActivities);
 
+        this.manage_activities.len_planned = planned.length;
+        this.manage_activities.len_today   = today.length;
+        this.manage_activities.len_overdue = overdue.length;
+        this.manage_activities.len_done    = doneActivities.length;
+
+        this.render();
     }
 
     click_view(ev) {

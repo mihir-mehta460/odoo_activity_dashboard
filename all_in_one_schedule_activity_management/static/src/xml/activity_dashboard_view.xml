@@ -2,51 +2,73 @@
 <!-- This XML code creates the dashboard for the mail.activity. -->
 <templates>
     <t t-name="ActivityDashboard">
-        
             <!-- Dashboard Title -->
             <div class="header_section">
-            <h1 class="dashboard_heading">Activity Dashboard</h1>
-            <div class="header_line"></div> 
-        </div>
+                <h1 class="dashboard_heading">Activity Dashboard</h1>
+                <div class="header_line"></div> 
+            </div>
+
         <div class="activity_dashboard d-flex" style="min-height: 100vh;">
             <!-- Sidebar Section for Filters -->
             <div class="o_sidebar">
                 <div class="o_section">
                     <h3>Filters</h3>
 
-                    <!-- Filter by Activity Type -->
                     <h3>Activity Type</h3>
                     <ul class="o_list_filters">
-                        <!-- All -->
-                        <li>
-                            <a href="#" t-on-click="() => filter_activity_type(false)">
-                                All
-                            </a>
+                        <!-- All Types -->
+                        <li style="display:flex; align-items:center; gap:6px;">
+                            <input 
+                                type="checkbox"
+                                id="type_all"
+                                t-att-checked="filterState.allTypes"
+                                t-on-click.prevent="(ev) => this.onAllTypesCheckbox(ev)"
+                            />
+                            <label for="type_all">All</label>
                         </li>
 
-                        <!-- Dynamic activity types from DB -->
-                        <t t-if="activity_types">
-                            <t t-foreach="activity_types" t-as="type" t-key="type.id">
-                                <li>
-                                    <a href="#" t-on-click="() => filter_activity_type(type.id)">
-                                        <t t-esc="type.name"/>
-                                    </a>
-                                </li>
-                            </t>
+                        <t t-foreach="activity_types" t-as="type" t-key="type.id">
+                            <li style="display:flex; align-items:center; gap:6px;">
+                                <input 
+                                    type="checkbox"
+                                    t-att-id="'type_' + type.id"
+                                    t-att-checked="filterState.types[type.id]"
+                                    t-on-click.prevent="(ev) => this.onTypeCheckbox(ev, type.id)"
+                                />
+                                <label t-att-for="'type_' + type.id">
+                                    <t t-esc="type.name"/>
+                                </label>
+                            </li>
                         </t>
                     </ul>
                 </div>
 
-                <!-- Filter by Assigned To (Dynamically Generated List) -->
                 <div class="o_section">
                     <h4>Assigned To</h4>
                     <ul class="o_list_filters">
-                        <li><a href="#" t-on-click="() => filter_assigned_to('All')">All</a></li>
-                        <t t-if="users.length">
-                            <t t-foreach="users" t-as="user" t-key="user.id">
-                                <li><a href="#" t-on-click="() => filter_assigned_to(user.id)">
-                                        <t t-esc="user.name"/></a></li>
-                            </t>
+                        <!-- All Users -->
+                        <li style="display:flex; align-items:center; gap:6px;">
+                            <input 
+                                type="checkbox"
+                                id="user_all"
+                                t-att-checked="filterState.allUsers"
+                                t-on-click.prevent="(ev) => this.onAllUsersCheckbox(ev)"
+                            />
+                            <label for="user_all">All</label>
+                        </li>
+
+                        <t t-foreach="users" t-as="user" t-key="user.id">
+                            <li style="display:flex; align-items:center; gap:6px;">
+                                <input 
+                                    type="checkbox"
+                                    t-att-id="'user_' + user.id"
+                                    t-att-checked="filterState.users[user.id]"
+                                    t-on-click.prevent="(ev) => this.onUserCheckbox(ev, user.id)"
+                                />
+                                <label t-att-for="'user_' + user.id">
+                                    <t t-esc="user.name"/>
+                                </label>
+                            </li>
                         </t>
                     </ul>
                 </div>
