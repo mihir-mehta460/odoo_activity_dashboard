@@ -4,7 +4,6 @@ import { Component, onWillStart, useState} from "@odoo/owl";
 import { session } from "@web/session";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
-// import { jsonrpc } from "@web/core/network/rpc_service";
 import { rpc } from "@web/core/network/rpc";
 
 class ActivityDashboard extends Component {
@@ -20,27 +19,20 @@ class ActivityDashboard extends Component {
             len_today: 0,
             len_overdue: 0,
             len_done: 0,
-            // len_cancel: 0,
-
             planned_activity: [],
             today_activity: [],
             overdue_activity: [],
             done_activity: [],
-            // cancelled_activity: [],
         });
         this.users = [];
 
-        // ✅ ADD THIS — reactive filter state for checkboxes
         this.filterState = useState({
-            types: {},   // { [typeId]: true/false }
-            users: {},   // { [userId]: true/false }
+            types: {},   
+            users: {},   
             allTypes: true,
             allUsers: true,
         });
 
-        // 🔴 CRITICAL — bind handlers
-        // this.filter_activity_type = this.filter_activity_type.bind(this);
-        // this.filter_assigned_to = this.filter_assigned_to.bind(this);
         this.click_view = this.click_view.bind(this);
         this.click_origin_view = this.click_origin_view.bind(this);
 
@@ -60,7 +52,6 @@ class ActivityDashboard extends Component {
             [],
             ["name"]
         );
-        // ✅ Initialize filter state for each type
         for (const type of this.activity_types) {
             this.filterState.types[type.id] = false;
         }
@@ -69,7 +60,6 @@ class ActivityDashboard extends Component {
     async addOriginNames(records) {
         const modelMap = {};
 
-        // group ids by model
         for (const rec of records) {
             if (rec.res_model && rec.res_id) {
                 if (!modelMap[rec.res_model]) {
@@ -81,7 +71,6 @@ class ActivityDashboard extends Component {
 
         const nameMap = {};
 
-        // fetch display names per model
         for (const model in modelMap) {
             const ids = [...modelMap[model]];
             const rows = await this.orm.read(model, ids, ["display_name"]);
@@ -90,7 +79,6 @@ class ActivityDashboard extends Component {
             }
         }
 
-        // attach origin_name
         for (const rec of records) {
             rec.origin_name = nameMap[`${rec.res_model}_${rec.res_id}`] || "";
         }
@@ -99,7 +87,6 @@ class ActivityDashboard extends Component {
     }
 
     async render_dashboards() {
-        // 1. Get counts from your custom method
         const counts = await rpc('/web/dataset/call_kw', {
             model: 'mail.activity',
             method: 'get_activity_count',
@@ -115,18 +102,15 @@ class ActivityDashboard extends Component {
             len_today:   Number(counts.len_today   || 0),
             len_overdue: Number(counts.len_overdue || 0),
             len_done:    Number(counts.len_done    || 0),
-            // len_cancel:  Number(counts.len_cancel  || 0),   // if you have this key
-            // Add any other keys your Python method returns
         };
     
         console.log("Activity counts from RPC:", counts);
         console.log("Processed manage_activities:", this.manage_activities);
     
-        // Fetch records only if you really need them displayed in tables
         let today = await this.orm.searchRead(
             "mail.activity",
             [["state", "=", "today"]],
-            ["display_name", "activity_type_id", "user_id", "date_deadline", "state", "create_date", "write_date","res_id","res_model"],  // Removed source_name
+            ["display_name", "activity_type_id", "user_id", "date_deadline", "state", "create_date", "write_date","res_id","res_model"],  
             { limit: 50 }
         );           
         this.manage_activities.today_activity = await this.addOriginNames(today);
@@ -139,7 +123,6 @@ class ActivityDashboard extends Component {
         );
         this.manage_activities.planned_activity = await this.addOriginNames(planned);
 
-        // Fetch Overdue Activities
         let overdue = await this.orm.searchRead(
             "mail.activity",
             [["state", "=", "overdue"]],
@@ -148,7 +131,6 @@ class ActivityDashboard extends Component {
         );
         this.manage_activities.overdue_activity = await this.addOriginNames(overdue);
     
-        // Fetch Completed Activities
         let done = await this.orm.searchRead(
             "mail.activity",
             [
@@ -159,27 +141,12 @@ class ActivityDashboard extends Component {
             { context: { active_test: false } }
         );
         this.manage_activities.done_activity = await this.addOriginNames(done);
-    
-        // Fetch Cancelled Activities
-        // let cancelled = await this.orm.searchRead(
-        //     "mail.activity",
-        //     [["state", "=", "cancelled"]],
-        //     ["display_name", "activity_type_id", "user_id", "date_deadline", "state", "create_date", "write_date","res_id","res_model"],
-        //     { limit: 50 }
-        // );
-        // this.manage_activities.cancelled_activity = await this.addOriginNames(cancelled);
-    
-        // console.log("Planned Activities:", this.manage_activities.planned_activity);
-        // console.log("Overdue Activities:", this.manage_activities.overdue_activity);
-        // console.log("Completed Activities:", this.manage_activities.done_activity);
-        // console.log("Cancelled Activities:", this.manage_activities.cancelled_activity);
     }
     
-    // Fetch the assigned users dynamically
     async fetch_assigned_users() {
         try {
             const users = await this.orm.searchRead(
-                "res.users",  // Fetch from 'res.users' model
+                "res.users",
                 [],
                 ["name", "id"],
                 { limit: 100 }
@@ -194,10 +161,8 @@ class ActivityDashboard extends Component {
     }
 
     onTypeCheckbox(ev, typeId) {
-        // ✅ STEP 1: Toggle FIRST
         this.filterState.types[typeId] = !this.filterState.types[typeId];
         
-        // ✅ STEP 2: THEN check if any selected (now reads updated value)
         const anySelected = Object.values(this.filterState.types).some(v => v === true);
         this.filterState.allTypes = !anySelected;
        
@@ -231,17 +196,14 @@ class ActivityDashboard extends Component {
         this.applyFilters();
     }
 
-    // ── Apply filters ───────────────────────────────────────
     async applyFilters() {
         let domain = [];
 
-        // Collect selected type IDs
         const selectedTypes = Object.entries(this.filterState.types)
             .filter(([, v]) => v === true)
             .map(([k]) => Number(k));
             console.log(selectedTypes)
 
-        // Collect selected user IDs
         const selectedUsers = Object.entries(this.filterState.users)
             .filter(([, v]) => v === true)
             .map(([k]) => Number(k));
@@ -258,7 +220,6 @@ class ActivityDashboard extends Component {
         await this.fetch_filtered_activities(domain);
     }
 
-        // ✅ REPLACE fetch_filtered_activities
     async fetch_filtered_activities(domain = []) {
         const field = [
             "display_name", "activity_type_id", "user_id", "date_deadline",
@@ -305,31 +266,15 @@ class ActivityDashboard extends Component {
             type: 'ir.actions.act_window',
             name: 'All Activity',
             res_model: 'mail.activity',
-            res_id: id,                // OPEN RECORD
+            res_id: id,               
             views: [[false, 'form']],
             target: 'new'
         });
     }
     
-
-    // click_view(e) {
-    //     const id = e.target.value;
-    //     this.env.services.action.doAction({
-    //         type: 'ir.actions.act_window',
-    //         name: 'All Activity',
-    //         res_model: 'mail.activity',
-    //         domain: [['id', '=', id]],
-    //         views: [ [false, 'form']],
-    //         view_mode: 'list,form',
-    //         target: 'new'
-    //     });
-    // }
-
     async click_origin_view(ev) {
         const id = Number(ev.currentTarget.dataset.id);
         if (!id) return;
-
-        // read activity to get target document
         const [activity] = await this.orm.read(
             "mail.activity",
             [id],
@@ -349,21 +294,6 @@ class ActivityDashboard extends Component {
             target: "current",
         });
     }
-
-
-    // all_activity(e) {
-    //     e.stopPropagation();
-    //     e.preventDefault();
-    //     this.env.services.action.doAction({
-    //         type: 'ir.actions.act_window',
-    //         name: 'All Activity',
-    //         res_model: 'mail.activity',
-    //         domain: [],
-    //         views: [[false, 'list'], [false, 'form']],
-    //         view_mode: 'list',
-    //         target: 'current'
-    //     });
-    // }
 
     planned_activity(e) {
         e.stopPropagation();
@@ -418,32 +348,6 @@ class ActivityDashboard extends Component {
             target: 'current'
         });
     }
-    // cancelled_activity(e) {
-    //     e.stopPropagation();
-    //     e.preventDefault();
-    //     this.env.services.action.doAction({
-    //         type: 'ir.actions.act_window',
-    //         name: "Today's Activity",
-    //         res_model: 'mail.activity',
-    //         domain: [['state', '=', 'cancel']],
-    //         views: [[false, 'list'], [false, 'form']],
-    //         view_mode: 'list',
-    //         target: 'current'
-    //     });
-    // }
-    // activity_type(e) {
-    //     e.stopPropagation();
-    //     e.preventDefault();
-    //    this.env.services.action.doAction({
-    //         type: 'ir.actions.act_window',
-    //         name: "Today's Activity",
-    //         res_model: 'mail.activity.type',
-    //         views: [[false, 'list'], [false, 'form']],
-    //         view_mode: 'list',
-    //         target: 'current'
-    //     });
-    // }
 }
 
 registry.category("actions").add("activity_dashboard", ActivityDashboard);
-// export default ActivityDashboard;

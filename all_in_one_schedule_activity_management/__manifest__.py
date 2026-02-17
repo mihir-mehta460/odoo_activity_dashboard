@@ -39,7 +39,7 @@
         'views/mail_activity_views.xml',
         'views/activity_tag_views.xml',
         'views/my_activity_views.xml',
-        'views/activity_dashbord_views.xml',
+        # 'views/activity_dashbord_views.xml',
         'views/reporting_activity_views.xml',
         'views/activity_history_views.xml',
         'views/res_config_setting_views.xml',

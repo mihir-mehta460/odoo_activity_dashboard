@@ -144,6 +144,9 @@
 .activity_dashboard .dashboard_heading {
     margin: 0;
     color: var(--text-primary);
+    position: fixed;
+    width: 100%;
+    margin-bottom: 20px;
 }
 
 .activity_dashboard .header_line {
@@ -164,11 +167,15 @@
     padding: 20px 16px;
     top: 120px;
     left: 0;
-    height: calc(100vh - 120px);
-    overflow-y: auto;
     z-index: 10;
+    height: 100vh;
+    overflow-y: scroll;   
     box-sizing: border-box;
     box-shadow: 2px 0 8px rgba(100, 130, 200, 0.08);
+}
+
+.activity_dashboard .o_sidebar .o_section:last-child {
+    padding-bottom: 150px;
 }
 
 .activity_dashboard .o_section h3,
@@ -270,7 +277,7 @@
    ============================================================ */
 
 .activity_dashboard .o_content {
-    padding: 20px 24px 40px !important;
+    padding: 20px 24px 40px 24px !important;
     min-height: 100vh;
     background: var(--bg-page);
     box-sizing: border-box;
@@ -338,16 +345,16 @@
 }
 
 .activity_dashboard .card-1{
-    background-color: #87CEFA;
-}
-.activity_dashboard .card-2{
     background-color: #B0E0E6;
 }
+.activity_dashboard .card-2{
+    background-color: #87CEFA;
+}
 .activity_dashboard .card-3{
-    background-color: #57e4dd;
+    background-color: #F090A7;
 }
 .activity_dashboard .card-4{
-    background-color: #d3d3d3;
+    background-color: #CA9EF0;
 }
 
 .activity_dashboard .activity-dashboard-card:hover {
@@ -371,7 +378,7 @@
 
 /* Label */
 .activity_dashboard .o_stat_label {
-    font-size: var(--font-size-sm);
+    font-size: var(--font-size-base);
     color: var(--text-muted);
     margin-top: 2px;
 }
