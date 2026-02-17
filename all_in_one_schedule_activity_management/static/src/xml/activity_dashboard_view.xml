@@ -4,7 +4,7 @@
     <t t-name="ActivityDashboard">
             <!-- Dashboard Title -->
             <div class="header_section">
-                <h1 class="dashboard_heading">Activity Dashboard</h1>
+                <h1 class="dashboard_heading p-3">Activity Dashboard</h1>
                 <div class="header_line"></div> 
             </div>
 
@@ -77,13 +77,13 @@
             <!-- Main Content Area -->
             <div class="o_content">
                 <!-- Displaying the Manage Activity Section -->
-                <div class="table_view">
+                <div class="table_view p-0">
                     <t t-call="ManageActivity"/>
                 </div>
 
                 <br/>
                 <!-- Displaying the Activity Table Section -->
-                <div class="table_view_activity">
+                <div class="table_view_activity ">
                     <t t-call="ActivityTable"/>
                 </div>
             </div>
@@ -116,8 +116,8 @@
                             <h4>Planned Activity</h4>
                         </div>
                     </div> -->
-                    <div class="activity-dashboard-card planned_activity" t-on-click="planned_activity">
-                        <i class="fa fa-clock-o o_stat_icon"/>
+                    <div class="activity-dashboard-card planned_activity card-1 " t-on-click="planned_activity">
+                        <i class="fa fa-clock-o o_stat_icon" style="color:black;"/>
                         <div class="o_stat_value">
                             <t t-esc="manage_activities.len_planned"/>
                         </div>
@@ -126,7 +126,7 @@
                 <!-- </div> -->
                 <!-- <div style="width: 20%;">
                     <div class="activity-dashboard-card done_activity"
-                         t-on-click="done_activity">
+                          t-on-click="done_activity">
                         <div class="activity-dashboard-card__icon-container bg-mauve-light d-flex">
                             <i class="fa fa-clock-o text-mauve" style="padding-right: 80px; color: #3c3939;font-size: 30px;
                             padding-left: 0px;padding-bottom: 5px;padding-top: 13px;"/>
@@ -151,8 +151,8 @@
                         </div>
                     </div>
                 </div> -->
-                <div class="activity-dashboard-card done_activity" t-on-click="done_activity">
-                    <i class="fa fa-check-circle o_stat_icon"/>
+                <div class="activity-dashboard-card done_activity card-2 " t-on-click="done_activity">
+                    <i class="fa fa-check-circle o_stat_icon" style="color:black;"/>
                     <div class="o_stat_value">
                         <t t-esc="manage_activities.len_done"/>
                     </div>
@@ -161,7 +161,7 @@
 
                 <!-- <div style="width: 20%;">
                     <div class="activity-dashboard-card today_activity"
-                         t-on-click="today_activity">
+                          t-on-click="today_activity">
                         <div class="activity-dashboard-card__icon-container bg-mauve-light d-flex">
                             <i class="fa fa-clock-o text-mauve" style="padding-right: 80px; color: #3c3939;font-size: 30px;
                             padding-left: 0px;padding-bottom: 5px;padding-top: 13px;"/>
@@ -185,8 +185,8 @@
                         </div>
                     </div>
                 </div> -->
-                <div class="activity-dashboard-card today_activity" t-on-click="today_activity">
-                    <i class="fa fa-calendar o_stat_icon"/>
+                <div class="activity-dashboard-card today_activity card-3 " t-on-click="today_activity">
+                    <i class="fa fa-calendar o_stat_icon" style="color:black;"/>
                     <div class="o_stat_value">
                         <t t-esc="manage_activities.len_today"/>
                     </div>
@@ -195,7 +195,7 @@
 
                 <!-- <div style="width: 20%;">
                     <div class="activity-dashboard-card overdue_activity"
-                         t-on-click="overdue_activity">
+                          t-on-click="overdue_activity">
                         <div class="activity-dashboard-card__icon-container bg-mauve-light d-flex">
                             <i class="fa fa-clock-o text-mauve" style="padding-right: 80px; color: #3c3939;font-size: 30px;
                             padding-left: 0px;padding-bottom: 5px;padding-top: 13px;"/>
@@ -246,8 +246,8 @@
                         </div>
                     </div>
                 </div> -->
-                <div class="activity-dashboard-card overdue_activity" t-on-click="overdue_activity">
-                    <i class="fa fa-exclamation-triangle o_stat_icon"/>
+                <div class="activity-dashboard-card overdue_activity card-4" t-on-click="overdue_activity">
+                    <i class="fa fa-exclamation-triangle o_stat_icon" style="color:black;"/>
                     <div class="o_stat_value">
                         <t t-esc="manage_activities.len_overdue"/>
                     </div>

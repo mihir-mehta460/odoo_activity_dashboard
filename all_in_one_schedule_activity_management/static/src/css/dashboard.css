@@ -1,5 +1,95 @@
-/* General Reset */
-.activity_dashboard p, .activity_dashboard span, .activity_dashboard a, .activity_dashboard ul, .activity_dashboard li, .activity_dashboard button {
+/* ============================================================
+   ACTIVITY DASHBOARD — CENTRAL THEME VARIABLES
+   Edit only this :root block to restyle the entire dashboard.
+   ============================================================ */
+
+:root {
+    /* --- Primary (bright sky-blue) --- */
+    --primary:              #00b4d8;
+    --primary-light:        #e0f7fb;
+    --primary-dark:         #0096b7;
+    --primary-text:         #ffffff;
+
+    /* --- Secondary (soft violet) --- */
+    --secondary:            #7c83fd;
+    --secondary-light:      #f0f0ff;
+    --secondary-dark:       #5a61e8;
+    --secondary-text:       #ffffff;
+
+    /* --- Accent (vivid coral) --- */
+    --accent:               #ff6b6b;
+    --accent-light:         #fff0f0;
+    --accent-dark:          #e05555;
+    --accent-text:          #ffffff;
+
+    /* --- Status colors --- */
+    --status-planned:       #4dabf7;
+    --status-planned-bg:    #e8f4ff;
+    --status-today:         #38d9a9;
+    --status-today-bg:      #e6fcf5;
+    --status-overdue:       #ff6b6b;
+    --status-overdue-bg:    #fff0f0;
+    --status-done:          #a9a9c8;
+    --status-done-bg:       #f3f3fb;
+
+    /* --- Backgrounds --- */
+    --bg-page:              #f0f4ff;
+    --bg-surface:           #ffffff;
+    --bg-muted:             #f7f9fc;
+
+    /* --- Border --- */
+    --border-color:         #e2e8f0;
+    --border-strong:        #c8d0e0;
+    --border-radius:        10px;
+    --border-radius-sm:     5px;
+
+    /* --- Card --- */
+    --card-bg:              #ffffff;
+    --card-border:          1px solid #e2e8f0;
+    --card-radius:          10px;
+    --card-shadow:          0 2px 8px rgba(100, 130, 200, 0.08),
+                            0 1px 3px rgba(100, 130, 200, 0.06);
+    --card-shadow-hover:    0 6px 20px rgba(100, 130, 200, 0.14),
+                            0 2px 8px rgba(100, 130, 200, 0.10);
+    --card-padding:         20px 24px;
+
+    /* --- Sidebar --- */
+    --sidebar-width:                240px;
+    --sidebar-bg:                   #ffffff;
+    --sidebar-border:               1px solid #e2e8f0;
+    --sidebar-header-color:         #5a61e8;
+    --sidebar-item-hover-bg:        #e0f7fb;
+    --sidebar-item-hover-color:     #00b4d8;
+    --sidebar-item-active-bg:       #e0f7fb;
+    --sidebar-item-active-color:    #00b4d8;
+
+    /* --- Typography --- */
+    --text-primary:         #1e2a3a;
+    --text-secondary:       #4a5568;
+    --text-muted:           #000000;
+    --font-size-xs:         11px;
+    --font-size-sm:         13px;
+    --font-size-base:       14px;
+    --font-size-md:         16px;
+    --font-size-lg:         20px;
+    --font-size-xl:         26px;
+
+    /* --- Transitions --- */
+    --transition-fast:      0.14s ease;
+    --transition-base:      0.24s ease;
+}
+
+
+/* ============================================================
+   GENERAL RESET
+   ============================================================ */
+
+.activity_dashboard p,
+.activity_dashboard span,
+.activity_dashboard a,
+.activity_dashboard ul,
+.activity_dashboard li,
+.activity_dashboard button {
     font-size: inherit;
     font-weight: inherit;
     line-height: inherit;
@@ -9,13 +99,18 @@
     font-weight: 600;
 }
 
-.activity_dashboard h1, .activity_dashboard h2, .activity_dashboard h3, .activity_dashboard h4, .activity_dashboard h5, .activity_dashboard h6 {
+.activity_dashboard h1,
+.activity_dashboard h2,
+.activity_dashboard h3,
+.activity_dashboard h4,
+.activity_dashboard h5,
+.activity_dashboard h6 {
     line-height: 1.5em;
     font-weight: 300;
 }
 
 .activity_dashboard .sub_title {
-    font-size: 14px;
+    font-size: var(--font-size-base);
 }
 
 .activity_dashboard .sub_title div span {
@@ -30,223 +125,437 @@
     fill: none;
 }
 
-/* Header Section */
+
+/* ============================================================
+   HEADER
+   ============================================================ */
+
 .activity_dashboard .header_section {
     padding: 20px;
-    background-color: #f4f5f6;
+    background-color: var(--bg-muted);
     text-align: center;
-    font-size: 24px;
+    font-size: var(--font-size-lg);
     font-weight: 600;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
     z-index: 9999;
     position: relative;
 }
 
 .activity_dashboard .dashboard_heading {
     margin: 0;
-    color: #333;
+    color: var(--text-primary);
 }
 
-/* Line Below Header */
 .activity_dashboard .header_line {
     margin-top: 10px;
-    border-top: 3px solid #e0e0e0;
+    border-top: 3px solid var(--border-color);
     width: 100%;
 }
 
-/* Sidebar Styles */
+
+/* ============================================================
+   SIDEBAR
+   ============================================================ */
+
 .activity_dashboard .o_sidebar {
-    width: 240px;
-    background: #fafafa;
-    border-right: 1px solid #e0e0e0;
+    width: var(--sidebar-width);
+    background: var(--sidebar-bg);
+    border-right: var(--sidebar-border);
     padding: 20px 16px;
-    top: 120px;  /* Adjusted below header */
+    top: 120px;
     left: 0;
-    height: calc(100vh - 120px);  /* Sidebar height after header */
+    height: calc(100vh - 120px);
     overflow-y: auto;
     z-index: 10;
     box-sizing: border-box;
-    box-shadow: 2px 0 6px rgba(0,0,0,0.08);
+    box-shadow: 2px 0 8px rgba(100, 130, 200, 0.08);
 }
 
-.activity_dashboard .o_section h3,.o_section h4 {
-    font-size: 14px;
-    font-weight: 600;
-    color: #4a4a4a;
+.activity_dashboard .o_section h3,
+.activity_dashboard .o_section h4 {
+    font-size: var(--font-size-sm);
+    font-weight: 700;
+    color: var(--sidebar-header-color);
     margin-bottom: 12px;
     text-transform: uppercase;
-    letter-spacing: 0.4px;
+    letter-spacing: 0.5px;
 }
 
 .activity_dashboard .o_action_manager {
-    overflow: visible !important;   /* prevent unwanted scrollbars cutting content */
+    overflow: visible !important;
     height: auto !important;
     min-height: unset !important;
 }
 
 .activity_dashboard .o_list_filters li {
-    margin-bottom: 8px;
+    margin-bottom: 6px;
 }
 
+/* Custom checkbox filter row */
+.activity_dashboard .filter-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 5px 8px;
+    border-radius: var(--border-radius-sm);
+    cursor: pointer;
+    color: var(--text-secondary);
+    font-size: var(--font-size-sm);
+    transition: background var(--transition-fast), color var(--transition-fast);
+    user-select: none;
+}
+
+.activity_dashboard .filter-item:hover {
+    background: var(--sidebar-item-hover-bg);
+    color: var(--sidebar-item-hover-color);
+}
+
+/* Legacy anchor-style filter links */
 .activity_dashboard .o_list_filters li a {
     cursor: pointer;
-    color: #333;
-    font-size: 13px;
+    color: var(--text-secondary);
+    font-size: var(--font-size-sm);
     text-decoration: none;
     display: block;
     padding: 4px 8px;
-    border-radius: 4px;
-    transition: all 0.12s;
+    border-radius: var(--border-radius-sm);
+    transition: all var(--transition-fast);
 }
 
-.activity_dashboard .o_list_filters li a:hover,.o_list_filters li a.active {
-    background: #e8f0fe;
-    color: #1a73e8;
+.activity_dashboard .o_list_filters li a:hover,
+.activity_dashboard .o_list_filters li a.active {
+    background: var(--sidebar-item-active-bg);
+    color: var(--sidebar-item-active-color);
     font-weight: 500;
 }
 
-/* Content Styles */
-.activity_dashboard .o_content {
-    box-shadow: 2px 0 6px rgba(0,0,0,0.08);
-    padding: 20px 24px 40px !important;
-    min-height: 100vh; /* Ensure content takes full height */
-    background: #f8f9fa;
-    box-sizing: border-box;
+
+/* ============================================================
+   CUSTOM CHECKBOX
+   ============================================================ */
+
+.activity_dashboard .custom-checkbox {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    min-width: 16px;
+    border: 2px solid var(--border-strong);
+    border-radius: var(--border-radius-sm);
+    background: var(--bg-surface);
     position: relative;
-    top: 0; /* Align content with the top of the page */
+    transition: background var(--transition-fast), border-color var(--transition-fast);
 }
 
-/* Flexbox Layout for Cards */
+.activity_dashboard .custom-checkbox.checked {
+    background: var(--primary);
+    border-color: var(--primary);
+}
+
+.activity_dashboard .custom-checkbox.checked::after {
+    content: '';
+    position: absolute;
+    left: 3px;
+    top: 0px;
+    width: 5px;
+    height: 9px;
+    border: 2px solid var(--primary-text);
+    border-top: none;
+    border-left: none;
+    transform: rotate(45deg);
+}
+
+
+/* ============================================================
+   MAIN CONTENT AREA
+   ============================================================ */
+
+.activity_dashboard .o_content {
+    padding: 20px 24px 40px !important;
+    min-height: 100vh;
+    background: var(--bg-page);
+    box-sizing: border-box;
+    position: relative;
+    top: 0;
+}
+
+
+/* ============================================================
+   LAYOUT — spacing resets for table sections
+   ============================================================ */
+
 .activity_dashboard .dashboard_main_section,
-.table_view,
-.table_planned_activity,
-.table_today_activity,
-.table_main_view {
-    margin-left: 0 !important;     /* reset any negative or small margins */
+.activity_dashboard .table_view,
+.activity_dashboard .table_planned_activity,
+.activity_dashboard .table_today_activity,
+.activity_dashboard .table_main_view {
+    margin-left: 0 !important;
     padding-left: 0 !important;
     margin-top: 8px !important;
 }
 
-/* Flexbox Layout for Activity Cards */
 .activity_dashboard .dashboard_main_section {
     display: flex;
-    gap: 16px;  /* Horizontal gap */
+    gap: 16px;
     flex-wrap: wrap;
-    margin-top: 0;  /* Ensure no extra space at the top */
+    margin: 0;
+    padding: 10px;
+    justify-content: center;
 }
 
 .activity_dashboard.o_content > *:first-child {
     margin-left: 0;
 }
 
-/* Activity Card Styling */
-.activity_dashboard .activity-dashboard-card {
-    flex: 1;
-    background: white;
-    border-radius: 8px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-    padding: 16px 12px;
-    text-align: center;
-    height: 150px; /* Set height for consistent card sizes */
+
+/* ============================================================
+   STAT CARDS GRID
+   ============================================================ */
+
+.activity_dashboard .o_activity_cards {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 18px;
+    margin-top: 10px;
 }
 
-/* Activity Heading Styling */
+.activity_dashboard .activity-dashboard-card {
+    background: var(--card-bg);
+    border-radius: var(--card-radius);
+    border: var(--card-border);
+    box-shadow: var(--card-shadow);
+    height: 120px;
+    width: 22%;
+    margin: 0;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+
+    cursor: pointer;
+    transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.activity_dashboard .card-1{
+    background-color: #87CEFA;
+}
+.activity_dashboard .card-2{
+    background-color: #B0E0E6;
+}
+.activity_dashboard .card-3{
+    background-color: #57e4dd;
+}
+.activity_dashboard .card-4{
+    background-color: #d3d3d3;
+}
+
+.activity_dashboard .activity-dashboard-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--card-shadow-hover);
+}
+
+/* Icon */
+.activity_dashboard .o_stat_icon {
+    font-size: 24px;
+    color: var(--primary);
+    margin-bottom: 6px;
+}
+
+/* Number */
+.activity_dashboard .o_stat_value {
+    font-size: var(--font-size-xl);
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+/* Label */
+.activity_dashboard .o_stat_label {
+    font-size: var(--font-size-sm);
+    color: var(--text-muted);
+    margin-top: 2px;
+}
+
+/* Card heading */
 .activity_dashboard .activity-dashboard-card__details h4 {
-    font-size: 16px;
+    font-size: var(--font-size-md);
     font-weight: 600;
     margin-top: 8px;
+    color: var(--text-primary);
 }
 
-.activity_dashboard.activity-dashboard-card__icon-container {
+.activity_dashboard .activity-dashboard-card__icon-container {
     justify-content: center !important;
     margin-bottom: 8px;
 }
 
-.activity_dashboard.activity-dashboard-card__icon-container i {
+.activity_dashboard .activity-dashboard-card__icon-container i {
     padding: 0 !important;
     margin: 0 auto;
     display: block;
 }
 
-/* Mobile Responsiveness */
-@media (max-width: 768px) {
-    .activity_dashboard .dashboard_main_section {
-        flex-direction: column;  /* Stack cards vertically on mobile */
-    }
 
-    .activity_dashboard .activity-dashboard-card {
-        flex: 1 1 100%;  /* Take full width on mobile */
-    }
+/* ============================================================
+   TABLE SECTION CARDS
+   ============================================================ */
+
+.activity_dashboard .table_view,
+.activity_dashboard .table_view_activity {
+    background: var(--card-bg);
+    border: var(--card-border);
+    border-radius: var(--card-radius);
+    box-shadow: var(--card-shadow);
+    padding: var(--card-padding);
+    margin-bottom: 20px;
 }
 
-/* Align buttons horizontally */
-.activity_dashboard .click-view, .activity_dashboard .click-origin-view {
-    display: inline-flex;  /* Align buttons horizontally */
-    gap: 10px;  /* Space between buttons */
+/* Section title */
+.activity_dashboard .section-title {
+    font-size: var(--font-size-md);
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 14px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid var(--primary-light);
 }
 
-/* Button styling */
-.activity_dashboard .click-view button, .activity_dashboard .click-origin-view button {
-    width: auto;  /* Allow buttons to adjust their width */
-    height: 35px;
-    padding: 5px 10px;  /* Adjust padding to ensure buttons fit */
-    border-radius: 8px;
-    background-color: #c4c4f2;
-    text-align: center;  /* Ensure the text inside the button is centered */
-}
-/* ===============================
-   ACTIVITY DASHBOARD CARDS
-   =============================== */
-
-.activity_dashboard .o_activity_cards {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: 18px;
-    margin-top: 10px;
+/* TABLE */
+.activity_dashboard table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: var(--font-size-sm);
 }
 
-/* Card */
-.activity_dashboard .activity-dashboard-card {
-    background: #ffffff;
-    border-radius: 10px;
-    height: 120px;
-
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-
-    border: 1px solid #e5e7eb;
-    transition: 0.18s ease;
-    cursor: pointer;
-}
-
-.activity_dashboard .activity-dashboard-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 16px rgba(0,0,0,0.08);
-}
-
-/* icon */
-.activity_dashboard .o_stat_icon {
-    font-size: 24px;
-    color: #6b7280;
-    margin-bottom: 6px;
-}
-
-/* number */
-.activity_dashboard .o_stat_value {
-    font-size: 26px;
+.activity_dashboard table th {
+    background: var(--bg-muted);
+    color: var(--text-secondary);
     font-weight: 600;
-    color: #111827;
+    padding: 10px 12px;
+    border-bottom: 2px solid var(--border-color);
+    text-align: left;
+    font-size: var(--font-size-base);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
 }
 
-/* label */
-.activity_dashboard .o_stat_label {
-    font-size: 13px;
-    color: #6b7280;
+.activity_dashboard table td {
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--border-color);
+    color: var(--text-primary);
+    font-size: var(--font-size-base);
+    vertical-align: middle;
 }
 
-/* responsive */
+.activity_dashboard table tr:last-child td {
+    border-bottom: none;
+}
+
+.activity_dashboard table tr:hover td {
+    background: var(--primary-light);
+}
+
+/* No data message */
+.activity_dashboard .no-data {
+    color: var(--text-muted);
+    font-style: italic;
+    font-size: var(--font-size-sm);
+    padding: 16px 0;
+}
+
+
+/* ============================================================
+   STATUS BADGES
+   ============================================================ */
+
+.activity_dashboard .badge-planned {
+    background: var(--status-planned-bg);
+    color: var(--status-planned);
+    padding: 2px 10px;
+    border-radius: 12px;
+    font-size: var(--font-size-xs);
+    font-weight: 600;
+}
+
+.activity_dashboard .badge-today {
+    background: var(--status-today-bg);
+    color: var(--status-today);
+    padding: 2px 10px;
+    border-radius: 12px;
+    font-size: var(--font-size-xs);
+    font-weight: 600;
+}
+
+.activity_dashboard .badge-overdue {
+    background: var(--status-overdue-bg);
+    color: var(--status-overdue);
+    padding: 2px 10px;
+    border-radius: 12px;
+    font-size: var(--font-size-xs);
+    font-weight: 600;
+}
+
+.activity_dashboard .badge-done {
+    background: var(--status-done-bg);
+    color: var(--status-done);
+    padding: 2px 10px;
+    border-radius: 12px;
+    font-size: var(--font-size-xs);
+    font-weight: 600;
+}
+
+
+/* ============================================================
+   BUTTONS
+   ============================================================ */
+
+.activity_dashboard .click-view,
+.activity_dashboard .click-origin-view {
+    display: inline-flex;
+    gap: 10px;
+}
+
+.activity_dashboard .click-view button,
+.activity_dashboard .click-origin-view button {
+    width: auto;
+    height: 32px;
+    padding: 4px 12px;
+    border-radius: var(--border-radius-sm);
+    background-color: var(--primary-light);
+    color: var(--primary-dark);
+    font-weight: 500;
+    font-size: var(--font-size-sm);
+    border: 1px solid var(--primary);
+    cursor: pointer;
+    transition: background var(--transition-fast), color var(--transition-fast);
+    text-align: center;
+}
+
+.activity_dashboard .click-view button:hover,
+.activity_dashboard .click-origin-view button:hover {
+    background-color: var(--primary);
+    color: var(--primary-text);
+}
+
+/* Edit link */
+.activity_dashboard .btn-edit {
+    color: var(--primary);
+    font-size: var(--font-size-sm);
+    font-weight: 500;
+    cursor: pointer;
+    transition: color var(--transition-fast);
+    text-decoration: none;
+}
+
+.activity_dashboard .btn-edit:hover {
+    color: var(--primary-dark);
+}
+
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+
 @media (max-width: 1400px) {
     .activity_dashboard .o_activity_cards {
         grid-template-columns: repeat(3, 1fr);
@@ -256,6 +565,14 @@
 @media (max-width: 900px) {
     .activity_dashboard .o_activity_cards {
         grid-template-columns: repeat(2, 1fr);
+    }
+
+    .activity_dashboard .dashboard_main_section {
+        flex-direction: column;
+    }
+
+    .activity_dashboard .activity-dashboard-card {
+        flex: 1 1 100%;
     }
 }
 
