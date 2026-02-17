@@ -108,7 +108,6 @@
 /* Content Styles */
 .activity_dashboard .o_content {
     box-shadow: 2px 0 6px rgba(0,0,0,0.08);
-
     padding: 20px 24px 40px !important;
     min-height: 100vh; /* Ensure content takes full height */
     background: #f8f9fa;

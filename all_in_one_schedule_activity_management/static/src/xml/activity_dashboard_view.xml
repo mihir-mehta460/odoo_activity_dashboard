@@ -283,7 +283,7 @@
                             <t t-esc="line['user_id']['1']"/>
                         </td>
                         <td>
-                            <t t-esc="line['due_date']"/> <!-- Display Due Date -->
+                            <t t-esc="line['date_deadline']"/> <!-- Display Due Date -->
                         </td>
                         <td>
                             <t t-esc="line['state']"/> <!-- Display State -->
@@ -369,7 +369,7 @@
                                     <t t-esc="line['user_id']['1']"/>
                                 </td>
                                 <td>
-                                    <t t-esc="line['due_date']"/> <!-- Display Due Date -->
+                                    <t t-esc="line['date_deadline']"/> <!-- Display Due Date -->
                                 </td>
                                 <td>
                                     <t t-esc="line['state']"/> <!-- Display State -->
@@ -456,7 +456,7 @@
                             <t t-esc="line['user_id']['1']"/>
                         </td>
                         <td>
-                            <t t-esc="line['due_date']"/> <!-- Display Due Date -->
+                            <t t-esc="line['date_deadline']"/> <!-- Display Due Date -->
                         </td>
                         <td>
                             <t t-esc="line['state']"/> <!-- Display State -->
@@ -538,7 +538,7 @@
                             <t t-esc="line['user_id']['1']"/>
                         </td>
                         <td>
-                            <t t-esc="line['due_date']"/> <!-- Display Due Date -->
+                            <t t-esc="line['date_deadline']"/> <!-- Display Due Date -->
                         </td>
                         <td>
                             <t t-esc="line['state']"/> <!-- Display State -->

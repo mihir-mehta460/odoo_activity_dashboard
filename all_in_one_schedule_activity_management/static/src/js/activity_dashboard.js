@@ -139,9 +139,12 @@ class ActivityDashboard extends Component {
         // Fetch Completed Activities
         let done = await this.orm.searchRead(
             "mail.activity",
-            [["state", "=", "done"]],
+            [
+                ["active", "=", false],
+                ["state", "!=", "cancel"]
+            ],
             ["display_name", "activity_type_id", "user_id", "date_deadline", "state", "create_date", "write_date","res_id","res_model"],
-            { limit: 50 }
+            { context: { active_test: false } }
         );
         this.manage_activities.done_activity = await this.addOriginNames(done);
     
@@ -209,33 +212,36 @@ class ActivityDashboard extends Component {
             field,
             {}
         );
+
+        const doneDomain = [...domain, ["active", "=", false]];
+        const doneActivities = await this.orm.searchRead(
+            "mail.activity",
+            doneDomain,
+            field,
+            { context: { active_test: false } }  // <-- KEY: bypass active filter
+        );
         
         console.log(activities)
+        console.log(doneActivities)
        
-
-                        
-                // regroup
             const planned = activities.filter(a => a.state === "planned");
             const today   = activities.filter(a => a.state === "today");
             const overdue = activities.filter(a => a.state === "overdue");
-            const done    = activities.filter(a => a.state === "done");
+            // const done    = doneActivities.filter(a => a.state === "done");
 
             this.manage_activities.planned_activity = await this.addOriginNames(planned);
             this.manage_activities.today_activity = await this.addOriginNames(today);
             this.manage_activities.overdue_activity = await this.addOriginNames(overdue);
-            this.manage_activities.done_activity = await this.addOriginNames(done);
+            this.manage_activities.done_activity = await this.addOriginNames(doneActivities);
 
-                    // Update counts too
             this.manage_activities.len_planned = planned.length;
             this.manage_activities.len_today = today.length;
             this.manage_activities.len_overdue = overdue.length;
-            this.manage_activities.len_done = done.length;
+            this.manage_activities.len_done = doneActivities.length;
 
-            // Force re-render
             this.render();
 
     }
-
 
     click_view(ev) {
         const id = Number(ev.currentTarget.dataset.id);

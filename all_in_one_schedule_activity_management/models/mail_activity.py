@@ -20,7 +20,7 @@ class MailActivity(models.Model):
     state = fields.Selection(
         [
             ("overdue", "Overdue"), ("today", "Today"), ("planned", "Planned"),
-            ("done", "Done"), ("cancel", "Cancelled"),
+            ("cancel", "Cancelled"),
         ], 
         "State", compute="_compute_state", store=True,
         help="State for the activity",
@@ -32,10 +32,16 @@ class MailActivity(models.Model):
 
     def _compute_state(self):
         """Compute the state of the activity based on its deadline"""
+        today = fields.Date.today()
         for rec in self:
-            if rec.date_deadline < fields.Date.today():
+
+            if rec.active is False:
+                rec.state = "done"
+                continue
+
+            if rec.date_deadline < today:
                 rec.state = 'overdue'
-            elif rec.date_deadline == fields.Date.today():
+            elif rec.date_deadline == today:
                 rec.state = 'today'
             else:
                 rec.state = 'planned'
@@ -95,19 +101,21 @@ class MailActivity(models.Model):
     def get_activity_count(self):
         """Return the count of different activities based on state"""
         activity = self.env["mail.activity"]
-        all_activity = activity.search([])
-        planned = activity.search([("state", "=", "planned")])
-        overdue = activity.search([("state", "=", "overdue")])
-        today = activity.search([("state", "=", "today")])
-        done = activity.search([("state", "=", "done"), ("active", "=", False)])
-        cancel = activity.search([("state", "=", "cancel")])
+        # all_activity = activity.search([])
+        planned = activity.search([("state", "=", "planned"), ("active", "=", True)])
+        overdue = activity.search([("state", "=", "overdue"), ("active", "=", True)])
+        today = activity.search([("state", "=", "today"), ("active", "=", True)])
+        done = activity.search([("active", "=", False)])
+        # cancel = activity.search([("state", "=", "cancel")])
+
+        # all_activity = planned | overdue | today | done
         return {
-            "len_all": len(all_activity),
+            "len_all": len(planned + overdue + today + done),
             "len_overdue": len(overdue),
             "len_planned": len(planned),
             "len_today": len(today),
             "len_done": len(done),
-            "len_cancel": len(cancel),
+            # "len_cancel": len(cancel),
         }
 
     def get_activity(self, id):
